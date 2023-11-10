@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.OnTokenCanceledListener
 
 class LocationHelper(private val activity: AppCompatActivity) {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var longitude = 0.0
+    private var latitude = 0.0
 
     init {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
@@ -87,11 +89,21 @@ class LocationHelper(private val activity: AppCompatActivity) {
                 else {
                     Toast.makeText(activity, "Get Success", Toast.LENGTH_LONG).show()
                     Log.d("Location", "Latitude: ${location.latitude}, Longitude: ${location.longitude}")
+                    this.latitude = location.latitude
+                    this.longitude = location.longitude
                     tvLatitude.text = "" + location.latitude
                     tvLongitude.text = "" + location.longitude
                 }
 
             }
+    }
+
+    public fun getLongitude() : Double {
+        return this.longitude
+    }
+
+    public fun getLatitude() : Double {
+        return this.latitude
     }
 
     private fun isLocationEnabled(): Boolean {
