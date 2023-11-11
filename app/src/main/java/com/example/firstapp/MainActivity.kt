@@ -1,42 +1,23 @@
 package com.example.firstapp
 
-import android.Manifest
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.Settings
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.example.firstapp.LocationHelper
-import com.example.firstapp.MapHandler
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import java.time.Duration
 import java.time.LocalTime
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var tvLatitude: TextView
-    private lateinit var tvLongitude: TextView
+    private lateinit var tvCurrentPos: TextView
+    private lateinit var tvLastPos: TextView
     private lateinit var totalDistant: TextView
     private lateinit var totalTime: TextView
+    private lateinit var laps: TextView
+    private lateinit var pointsNum: TextView
     private lateinit var locationHelper: LocationHelper
     private lateinit var mapHandler: MapHandler
     private lateinit var mapFragment : SupportMapFragment
@@ -49,24 +30,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        tvLatitude=findViewById(R.id.Latitude)
-        tvLongitude=findViewById(R.id.Longitude)
-        totalDistant=findViewById(R.id.totalDistant)
+        tvCurrentPos=findViewById(R.id.currentPos)
+        tvLastPos=findViewById(R.id.lastPoint)
+        totalDistant=findViewById(R.id.totalDistance)
         totalTime=findViewById(R.id.totalTime)
+        laps=findViewById(R.id.okrazenia)
+        pointsNum=findViewById(R.id.pointsNum)
         locationHelper = LocationHelper(this)
         mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapHandler = MapHandler(mapFragment)
 
-        val btnClickMe = findViewById<Button>(R.id.mybutton)
+        //val btnClickMe = findViewById<Button>(R.id.mybutton)
         val btnTraceControl = findViewById<Button>(R.id.traceControlButton)
-        val tvMyTextView = findViewById<TextView>(R.id.textView)
-        var timesClicked = 0
-        btnClickMe.text = "Haha" // ustawienie atrybutu tekstu
+        //var timesClicked = 0
+        //btnClickMe.text = "Haha" // ustawienie atrybutu tekstu
 
         // TODO Kod odpowiedzialny za pobieranie lokalizacji wjebać do innego pliku - Done
         // TODO Podpiąć getCurrentLocation() pod button a potem co 0.5sek aktualizować - Done
         // TODO Dodac zliczanie okrazen do MapHandlera
-        /* TODO UtworzycKlase RunTrace która będzie reprezentowała dany bieg usera
+        /* TODO UtworzycKlase RunSession która będzie reprezentowała dany bieg usera
             - markery z MapHandlera
             - odczyt odlegosci
             - odczyt czasu
@@ -75,8 +57,8 @@ class MainActivity : AppCompatActivity() {
         // TODO przepisac kod na MVVM
 
 
-        locationHelper.getCurrentLocation(tvLatitude, tvLongitude)
-
+        locationHelper.getCurrentLocation(tvCurrentPos)
+        /*
         btnClickMe.setOnClickListener {
             timesClicked++
             btnClickMe.text = "Haha you clicked me!"
@@ -85,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Hey Jakub!", Toast.LENGTH_LONG).show() // nice popup!
             mapHandler.setMarker(locationHelper.getLatitude(), locationHelper.getLongitude())
         }
-
+        */
         btnTraceControl.setOnClickListener {
             if(!sessionStarted) {
                 sessionStarted = true
@@ -106,11 +88,13 @@ class MainActivity : AppCompatActivity() {
     private val getLocationTask = object : Runnable {
         override fun run() {
             if (sessionStarted) {
-                locationHelper.getCurrentLocation(tvLatitude, tvLongitude)
+                tvLastPos.text = "" + locationHelper.getLatitude() + " " + locationHelper.getLongitude()
+                locationHelper.getCurrentLocation(tvCurrentPos)
                 mapHandler.setMarker(locationHelper.getLatitude(), locationHelper.getLongitude())
-                totalDistant.text = "Total distance: " + mapHandler.calculateTotalDistance().toString() + " m"
+                totalDistant.text = "" + mapHandler.calculateTotalDistance().toString() + " m"
                 val duration = Duration.between(mapHandler.getStartTime(), LocalTime.now())
-                totalTime.text = "Total time: "+duration.toHours()+" h "+duration.toMinutes() % 60 + " m " + duration.seconds % 60 + " s"
+                totalTime.text = "" + duration.toHours()+" h "+duration.toMinutes() % 60 + " m " + duration.seconds % 60 + " s"
+                pointsNum.text = "" + mapHandler.getMarkersCount()
                 handler.postDelayed(this, delayMillis.toLong())
             }
         }

@@ -1,6 +1,7 @@
 package com.example.firstapp
 
 import android.location.Location
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -10,20 +11,40 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import java.time.LocalTime
+import kotlin.math.abs
 
 class MapHandler(private val mapFragment: SupportMapFragment) {
     private lateinit var googleMap: GoogleMap
     private val markers: MutableList<Marker> = ArrayList()
     private val polylines: MutableList<Polyline> = ArrayList()
     private var startTime: LocalTime = LocalTime.now()
+    private var zoomLevel : Float = 17.5F
 
 
     public fun setMarker(latitude: Double, longitude: Double) : Boolean {
         val location = LatLng(latitude, longitude)
         val markerExists = markers.any { it.position == location }
-        if(!markerExists) {
+        if(!markerExists && markers.size < 2) {
             mapFragment.getMapAsync(OnMapReadyCallback {
                 googleMap = it
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
+                val marker =
+                    googleMap.addMarker(MarkerOptions().position(location).title("My Location"))
+                if (marker != null) {
+                    markers.add(marker)
+                }
+                if (markers.size > 1) {
+                    drawRoute()
+                }
+            })
+            return true
+        }
+        else if(!markerExists  && abs(markers.last().position.latitude - latitude) > 0.00005 &&
+            abs(markers.last().position.longitude - longitude) > 0.00005)
+        {
+            mapFragment.getMapAsync(OnMapReadyCallback {
+                googleMap = it
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
                 val marker =
                     googleMap.addMarker(MarkerOptions().position(location).title("My Location"))
                 if (marker != null) {
@@ -90,6 +111,11 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
     public fun setStartTime(time: LocalTime)
     {
         this.startTime = time
+    }
+
+    public fun getMarkersCount() : Int
+    {
+        return markers.size
     }
 
 }
