@@ -22,13 +22,15 @@ import com.google.android.gms.tasks.OnTokenCanceledListener
 
 class LocationHelper(private val activity: AppCompatActivity) {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var longitude = 0.0
+    private var latitude = 0.0
 
     init {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
     }
 
 
-    fun getLastLocation(tvLatitude: TextView, tvLongitude: TextView) {
+    fun getLastLocation(tv: TextView) {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
                 if (ActivityCompat.checkSelfPermission(
@@ -49,8 +51,7 @@ class LocationHelper(private val activity: AppCompatActivity) {
                     } else {
                         Toast.makeText(activity, "Get Success", Toast.LENGTH_LONG).show()
                         Log.d("Location", "Latitude: ${location.latitude}, Longitude: ${location.longitude}")
-                        tvLatitude.text = "" + location.latitude
-                        tvLongitude.text = "" + location.longitude
+                        tv.text = "" + location.latitude +" " + location.longitude
                     }
                 }
             } else {
@@ -63,7 +64,7 @@ class LocationHelper(private val activity: AppCompatActivity) {
         }
     }
 
-    fun getCurrentLocation(tvLatitude: TextView, tvLongitude: TextView)
+    fun getCurrentLocation(tv: TextView)
     {
         if (ActivityCompat.checkSelfPermission(
                 activity,
@@ -87,11 +88,20 @@ class LocationHelper(private val activity: AppCompatActivity) {
                 else {
                     Toast.makeText(activity, "Get Success", Toast.LENGTH_LONG).show()
                     Log.d("Location", "Latitude: ${location.latitude}, Longitude: ${location.longitude}")
-                    tvLatitude.text = "" + location.latitude
-                    tvLongitude.text = "" + location.longitude
+                    tv.text = "" + location.latitude +" " + location.longitude
+                    this.latitude = location.latitude
+                    this.longitude = location.longitude
                 }
 
             }
+    }
+
+    public fun getLongitude() : Double {
+        return this.longitude
+    }
+
+    public fun getLatitude() : Double {
+        return this.latitude
     }
 
     private fun isLocationEnabled(): Boolean {
