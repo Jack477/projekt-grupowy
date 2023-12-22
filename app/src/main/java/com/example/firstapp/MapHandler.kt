@@ -19,6 +19,8 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
     private val polylines: MutableList<Polyline> = ArrayList()
     private var startTime: LocalTime = LocalTime.now()
     private var zoomLevel : Float = 17.5F
+    private var markerId : Int = 1
+    private var laps : Int = 0
 
 
     public fun setMarker(latitude: Double, longitude: Double) : Boolean {
@@ -29,9 +31,10 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
                 googleMap = it
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
                 val marker =
-                    googleMap.addMarker(MarkerOptions().position(location).title("My Location"))
+                    googleMap.addMarker(MarkerOptions().position(location).title("Measure: " + this.markerId.toString()))
                 if (marker != null) {
                     markers.add(marker)
+                    this.markerId++
                 }
                 if (markers.size > 1) {
                     drawRoute()
@@ -46,12 +49,17 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
                 googleMap = it
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
                 val marker =
-                    googleMap.addMarker(MarkerOptions().position(location).title("My Location"))
+                    googleMap.addMarker(MarkerOptions().position(location).title("Measure: " + this.markerId.toString()))
                 if (marker != null) {
                     markers.add(marker)
+                    this.markerId++
                 }
                 if (markers.size > 1) {
                     drawRoute()
+                }
+                if (abs(markers.first().position.latitude - markers.last().position.latitude) < 0.0001 && abs(markers.first().position.longitude - markers.last().position.longitude) < 0.0001)
+                {
+                    this.laps++
                 }
             })
             return true
@@ -116,6 +124,26 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
     public fun getMarkersCount() : Int
     {
         return markers.size
+    }
+
+    public fun getMarkersArray() : MutableList<Marker>
+    {
+        return this.markers
+    }
+
+    public fun clearMapData()
+    {
+        this.markers.clear()
+        this.polylines.clear()
+        if(::googleMap.isInitialized)
+            this.googleMap.clear()
+        this.markerId = 1
+        this.laps = 0
+    }
+
+    public fun getLaps() : Int
+    {
+        return this.laps
     }
 
 }

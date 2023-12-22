@@ -1,6 +1,7 @@
 package com.example.firstapp
 
 import android.Manifest
+import android.app.Activity
 import android.widget.TextView
 import android.content.Context
 import android.content.Intent
@@ -14,19 +15,18 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import android.util.Log
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
 
-class LocationHelper(private val activity: AppCompatActivity) {
+class LocationHelper(private val context: Context, private val activity: Activity) {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var longitude = 0.0
     private var latitude = 0.0
 
     init {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     }
 
 
@@ -34,30 +34,30 @@ class LocationHelper(private val activity: AppCompatActivity) {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
                 if (ActivityCompat.checkSelfPermission(
-                        activity,
+                        context,
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        activity,
+                        context,
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     requestPermission()
                     return
                 }
-                fusedLocationProviderClient.lastLocation.addOnCompleteListener(activity) { task ->
+                fusedLocationProviderClient.lastLocation.addOnCompleteListener(context as AppCompatActivity) { task ->
                     val location: Location? = task.result
                     if (location == null) {
-                        Toast.makeText(activity, "Null Received", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Null Received", Toast.LENGTH_LONG).show()
                     } else {
-                        Toast.makeText(activity, "Get Success", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Get Success", Toast.LENGTH_LONG).show()
                         Log.d("Location", "Latitude: ${location.latitude}, Longitude: ${location.longitude}")
                         tv.text = "" + location.latitude +" " + location.longitude
                     }
                 }
             } else {
-                Toast.makeText(activity, "Turn on location", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Turn on location", Toast.LENGTH_LONG).show()
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                activity.startActivity(intent)
+                context.startActivity(intent)
             }
         } else {
             requestPermission()
@@ -67,10 +67,10 @@ class LocationHelper(private val activity: AppCompatActivity) {
     fun getCurrentLocation(tv: TextView)
     {
         if (ActivityCompat.checkSelfPermission(
-                activity,
+                context,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                activity,
+                context,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -84,9 +84,9 @@ class LocationHelper(private val activity: AppCompatActivity) {
         })
             .addOnSuccessListener { location: Location? ->
                 if (location == null)
-                    Toast.makeText(activity, "Cannot get location.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Cannot get location.", Toast.LENGTH_SHORT).show()
                 else {
-                    Toast.makeText(activity, "Get Success", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Get Success", Toast.LENGTH_LONG).show()
                     Log.d("Location", "Latitude: ${location.latitude}, Longitude: ${location.longitude}")
                     tv.text = "" + location.latitude +" " + location.longitude
                     this.latitude = location.latitude
@@ -106,7 +106,7 @@ class LocationHelper(private val activity: AppCompatActivity) {
 
     private fun isLocationEnabled(): Boolean {
         val locationManager: LocationManager =
-            activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )

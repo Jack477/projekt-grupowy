@@ -6,188 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/totalDistance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 m"
-        app:layout_constraintBottom_toTopOf="@+id/map_fragment"
-        app:layout_constraintEnd_toStartOf="@+id/totalTimeText"
-        app:layout_constraintHorizontal_bias="0.408"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totalDistantText"
-        app:layout_constraintVertical_bias="0.149" />
-
-    <TextView
-        android:id="@+id/okrazenia"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0"
-        android:textColor="#FF0000"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.187" />
-
-    <TextView
-        android:id="@+id/Latitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="240dp"
-        android:text="Współrzędne ostatniego punktu pom. :"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/Longitude"
-        app:layout_constraintHorizontal_bias="0.085"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/okrazenia"
-        app:layout_constraintVertical_bias="0.735" />
-
-    <TextView
-        android:id="@+id/Longitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
-        android:layout_marginBottom="240dp"
-        android:text="Aktualne współrzędne:"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.534"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/okrazenia"
-        app:layout_constraintVertical_bias="0.735" />
-
     <fragment
-        android:id="@+id/map_fragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        class="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="280dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Longitude"
-        app:layout_constraintVertical_bias="1.0"
-        app:mapId="map" />
-
-    <Button
-        android:id="@+id/traceControlButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"
-        android:text="Start"
-        app:layout_constraintBottom_toTopOf="@+id/map_fragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:navGraph="@navigation/nav_graph" />
 
-    <TextView
-        android:id="@+id/totalDistantText"
-        android:layout_width="wrap_content"
+    <!-- Bottom Navigation View -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Total distance:"
-        app:layout_constraintBottom_toTopOf="@+id/map_fragment"
-        app:layout_constraintEnd_toStartOf="@+id/totalTimeText"
-        app:layout_constraintHorizontal_bias="0.39"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/traceControlButton"
-        app:layout_constraintVertical_bias="0.265" />
-
-    <TextView
-        android:id="@+id/totalTimeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="48dp"
-        android:text="Total time:"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.247"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/traceControlButton" />
-
-    <TextView
-        android:id="@+id/totalTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="16dp"
-        android:text="-----"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.27"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totalTimeText" />
-
-    <TextView
-        android:id="@+id/pointsNumText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ilość punktów pom. :"
-        app:layout_constraintBottom_toTopOf="@+id/map_fragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.515"
-        app:layout_constraintStart_toEndOf="@+id/totalTimeText"
-        app:layout_constraintTop_toBottomOf="@+id/traceControlButton"
-        app:layout_constraintVertical_bias="0.265" />
-
-    <TextView
-        android:id="@+id/lastPoint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:text="0 0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Latitude"
-        app:layout_constraintVertical_bias="0.046" />
-
-    <TextView
-        android:id="@+id/currentPos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 0"
+        android:background="?android:attr/windowBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.772"
-        app:layout_constraintStart_toEndOf="@+id/lastPoint"
-        app:layout_constraintTop_toBottomOf="@+id/Longitude"
-        app:layout_constraintVertical_bias="0.046" />
-
-    <TextView
-        android:id="@+id/iloscOkrazenTekst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:text="ilość okrążeń"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/okrazenia" />
+        app:menu="@menu/bottom_nav_menu" />
 
-    <TextView
-        android:id="@+id/pointsNum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.541"
-        app:layout_constraintStart_toEndOf="@+id/totalTime"
-        app:layout_constraintTop_toBottomOf="@+id/pointsNumText" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary" />
 
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="192dp"
-        android:layout_marginTop="28dp"
-        android:text="Enable Voice Commands"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

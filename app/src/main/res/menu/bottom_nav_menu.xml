@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mainFragment"
+        android:title="Main"
+         />
+
+    <item
+        android:id="@+id/statsFragment"
+        android:title="Stats"
+        />
+
+    <item
+        android:id="@+id/aboutFragment"
+        android:title="About"
+     />
+</menu>
