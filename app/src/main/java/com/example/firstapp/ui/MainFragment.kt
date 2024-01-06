@@ -12,11 +12,16 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.firstapp.LocationHelper
 import com.example.firstapp.MapHandler
+import com.example.firstapp.FileGPXIO
 import com.example.firstapp.RunSession
 import com.example.firstapp.R
 import com.google.android.gms.maps.SupportMapFragment
 import java.time.Duration
 import java.time.LocalTime
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
+import androidx.core.app.ActivityCompat
 
 class MainFragment : Fragment() {
 
@@ -31,11 +36,15 @@ class MainFragment : Fragment() {
     private lateinit var mapHandler: MapHandler
     private lateinit var mapFragment : SupportMapFragment
     private var sessions: MutableList<RunSession> = ArrayList()
-
+    private var fileGpxIO = FileGPXIO()
     private var sessionStarted : Boolean = false
     private val handler = Handler(Looper.getMainLooper())
     private val delayMillis = 350
     private var sessionId = 0
+
+    companion object {
+        private const val MY_PERMISSIONS_REQUEST_STORAGE = 100
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,10 +80,34 @@ class MainFragment : Fragment() {
                 btnTraceControl.text = "Start"
                 handler.removeCallbacksAndMessages(null)
                 this.sessionId++
+
+                if (checkPermissions()) {
+                    fileGpxIO.downloadGpxFile(requireContext(), sessions[sessionId - 1])
+                } else {
+                    requestPermissions()
+                }
             }
         }
 
         return root
+    }
+
+    private fun checkPermissions(): Boolean {
+        val writePermission =
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val readPermission =
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        return writePermission == PackageManager.PERMISSION_GRANTED && readPermission == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestPermissions() {
+        val permissions = arrayOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+
+        ActivityCompat.requestPermissions(requireActivity(), permissions, MY_PERMISSIONS_REQUEST_STORAGE)
     }
 
     private val getLocationTask = object : Runnable {
