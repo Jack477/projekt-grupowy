@@ -1,5 +1,6 @@
 package com.example.firstapp.ui
 
+import SharedViewModel
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,6 +18,11 @@ import com.example.firstapp.R
 import com.google.android.gms.maps.SupportMapFragment
 import java.time.Duration
 import java.time.LocalTime
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
 
 class MainFragment : Fragment() {
 
@@ -31,12 +37,16 @@ class MainFragment : Fragment() {
     private lateinit var mapHandler: MapHandler
     private lateinit var mapFragment : SupportMapFragment
     private var sessions: MutableList<RunSession> = ArrayList()
-
+    private lateinit var sharedViewModel: SharedViewModel
     private var sessionStarted : Boolean = false
     private val handler = Handler(Looper.getMainLooper())
     private val delayMillis = 350
     private var sessionId = 0
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,11 +81,13 @@ class MainFragment : Fragment() {
                 btnTraceControl.text = "Start"
                 handler.removeCallbacksAndMessages(null)
                 this.sessionId++
+                sharedViewModel.runSession = sessions[sessionId-1]
             }
         }
 
         return root
     }
+
 
     private val getLocationTask = object : Runnable {
         override fun run() {

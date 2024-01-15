@@ -25,4 +25,8 @@ class RunSession(startTime: LocalTime) {
         this.duration = Duration.between(this.startTime, this.finishTime)
     }
 
+    fun getMarkersList(): MutableList<Marker> {
+        return markers
+    }
+
 }
