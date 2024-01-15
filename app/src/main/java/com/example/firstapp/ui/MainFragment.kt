@@ -1,5 +1,6 @@
 package com.example.firstapp.ui
 
+import SharedViewModel
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,7 +13,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.firstapp.LocationHelper
 import com.example.firstapp.MapHandler
-import com.example.firstapp.FileGPXIO
 import com.example.firstapp.RunSession
 import com.example.firstapp.R
 import com.google.android.gms.maps.SupportMapFragment
@@ -22,6 +22,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
 
 class MainFragment : Fragment() {
 
@@ -36,16 +37,16 @@ class MainFragment : Fragment() {
     private lateinit var mapHandler: MapHandler
     private lateinit var mapFragment : SupportMapFragment
     private var sessions: MutableList<RunSession> = ArrayList()
-    private var fileGpxIO = FileGPXIO()
+    private lateinit var sharedViewModel: SharedViewModel
     private var sessionStarted : Boolean = false
     private val handler = Handler(Looper.getMainLooper())
     private val delayMillis = 350
     private var sessionId = 0
 
-    companion object {
-        private const val MY_PERMISSIONS_REQUEST_STORAGE = 100
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -80,35 +81,13 @@ class MainFragment : Fragment() {
                 btnTraceControl.text = "Start"
                 handler.removeCallbacksAndMessages(null)
                 this.sessionId++
-
-                if (checkPermissions()) {
-                    fileGpxIO.downloadGpxFile(requireContext(), sessions[sessionId - 1])
-                } else {
-                    requestPermissions()
-                }
+                sharedViewModel.runSession = sessions[sessionId-1]
             }
         }
 
         return root
     }
 
-    private fun checkPermissions(): Boolean {
-        val writePermission =
-            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        val readPermission =
-            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-
-        return writePermission == PackageManager.PERMISSION_GRANTED && readPermission == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun requestPermissions() {
-        val permissions = arrayOf(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-
-        ActivityCompat.requestPermissions(requireActivity(), permissions, MY_PERMISSIONS_REQUEST_STORAGE)
-    }
 
     private val getLocationTask = object : Runnable {
         override fun run() {

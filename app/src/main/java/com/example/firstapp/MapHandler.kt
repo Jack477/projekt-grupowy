@@ -35,7 +35,7 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
                     MarkerOptions()
                         .position(location)
                         .title("Measure: " + this.markerId.toString())
-                        .snippet("Time: ${LocalDateTime.now()}, Laps: $laps, Distance: ${calculateTotalDistance()} meters")
+                        .snippet("Time: ${LocalDateTime.now()}, Laps: ${this.laps}, Distance: ${calculateTotalDistance()} meters")
                 val marker = googleMap.addMarker(markerOptions)
                 if (marker != null) {
                     markers.add(marker)
@@ -57,7 +57,7 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
                     MarkerOptions()
                         .position(location)
                         .title("Measure: " + this.markerId.toString())
-                        .snippet("Time: ${LocalDateTime.now()}, Laps: $laps, Distance: ${calculateTotalDistance()} meters")
+                        .snippet("Time: ${LocalDateTime.now()}, Laps: ${this.laps}, Distance: ${calculateTotalDistance()} meters")
                 val marker = googleMap.addMarker(markerOptions)
                 if (marker != null) {
                     markers.add(marker)
