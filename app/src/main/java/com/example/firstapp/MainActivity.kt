@@ -19,23 +19,6 @@ import java.time.LocalTime
 
 class MainActivity : AppCompatActivity() {
 
-    /*
-    private lateinit var tvCurrentPos: TextView
-    private lateinit var tvLastPos: TextView
-    private lateinit var totalDistant: TextView
-    private lateinit var totalTime: TextView
-    private lateinit var laps: TextView
-    private lateinit var pointsNum: TextView
-    private lateinit var voiceSwitch: Switch
-    private lateinit var locationHelper: LocationHelper
-    private lateinit var mapHandler: MapHandler
-    private lateinit var mapFragment : SupportMapFragment
-
-    private var sessionStarted : Boolean = false
-    private val handler = Handler(Looper.getMainLooper())
-    private val delayMillis = 350
-     */
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import java.time.LocalTime
+import java.time.LocalDateTime
 import kotlin.math.abs
 
 class MapHandler(private val mapFragment: SupportMapFragment) {
@@ -30,8 +31,12 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
             mapFragment.getMapAsync(OnMapReadyCallback {
                 googleMap = it
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
-                val marker =
-                    googleMap.addMarker(MarkerOptions().position(location).title("Measure: " + this.markerId.toString()))
+                val markerOptions =
+                    MarkerOptions()
+                        .position(location)
+                        .title("Measure: " + this.markerId.toString())
+                        .snippet("Time: ${LocalDateTime.now()}, Laps: $laps, Distance: ${calculateTotalDistance()} meters")
+                val marker = googleMap.addMarker(markerOptions)
                 if (marker != null) {
                     markers.add(marker)
                     this.markerId++
@@ -48,8 +53,13 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
             mapFragment.getMapAsync(OnMapReadyCallback {
                 googleMap = it
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
-                val marker =
-                    googleMap.addMarker(MarkerOptions().position(location).title("Measure: " + this.markerId.toString()))
+                val markerOptions =
+                    MarkerOptions()
+                        .position(location)
+                        .title("Measure: " + this.markerId.toString())
+                        .snippet("Time: ${LocalDateTime.now()}, Laps: $laps, Distance: ${calculateTotalDistance()} meters")
+                val marker = googleMap.addMarker(markerOptions)
+
                 if (marker != null) {
                     markers.add(marker)
                     this.markerId++

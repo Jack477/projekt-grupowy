@@ -37,6 +37,11 @@ class MainFragment : Fragment() {
     private val delayMillis = 350
     private var sessionId = 0
 
+    companion object {
+        const val MY_PERMISSIONS_REQUEST_STORAGE = 100
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
