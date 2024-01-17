@@ -90,6 +90,7 @@ class MainFragment : Fragment() {
         voiceSwitch.setOnClickListener {
             if (voiceControl == false) {
                 Toast.makeText(context, "Rozpoznawanie mowy on", Toast.LENGTH_SHORT).show()
+                voiceControl = true
                 btnTraceControl.isEnabled = false
 
                 // wlacz sterowanie glosem
@@ -153,16 +154,14 @@ class MainFragment : Fragment() {
                     override fun onEvent(eventType: Int, params: Bundle?) {}
                 })
                 speechToText.startListening()
-
-                voiceControl = true
             }
             else
             {
                 Toast.makeText(context, "Rozpoznawanie mowy off", Toast.LENGTH_SHORT).show()
                 btnTraceControl.isEnabled = true
 
-                speechToText.handler.removeCallbacksAndMessages(null)
-                speechToText.speechRecognizer.stopListening()
+                speechToText.stopListening()
+
 
                 voiceControl = false
             }

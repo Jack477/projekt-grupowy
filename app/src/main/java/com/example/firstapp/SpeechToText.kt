@@ -42,6 +42,13 @@ class SpeechToText(private val context: Context, private val activity: Activity)
         speechRecognizer.startListening(intent)
     }
 
+    public fun stopListening()
+    {
+        handler.removeCallbacksAndMessages(null)
+        speechRecognizer.stopListening()
+        speechRecognizer.destroy()
+    }
+
 
     fun onDestroy() {
         speechRecognizer.destroy()
