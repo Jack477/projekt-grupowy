@@ -50,18 +50,22 @@ class FileGPXIO {
         return File(context.getExternalFilesDir(null), FileName)
     }
 
-    fun shareFile(context: Context, file: File) {
-        try {
-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+    fun shareFile(context: Context, runSession: RunSession) {
+        val file = writeDataToGpxFile(context, runSession)
+        if (file != null) {
+            try {
+                val uri =
+                    FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
 
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.type = "text/xml"
-            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.type = "text/xml"
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-            context.startActivity(Intent.createChooser(shareIntent, "Share GPX File"))
-        } catch (e: Exception) {
-            e.printStackTrace()
+                context.startActivity(Intent.createChooser(shareIntent, "Share GPX File"))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -92,4 +96,5 @@ class FileGPXIO {
             }
         }
     }
-}
+    }
+

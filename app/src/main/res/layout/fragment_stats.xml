@@ -4,37 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/black"
     android:orientation="vertical"
     tools:context=".ui.StatsFragment">
+
 
     <Button
         android:id="@+id/download_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="20dp"
         android:text="Download"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
-
 
     <ImageButton
         android:id="@+id/share_button"
         android:layout_width="88dp"
         android:layout_height="57dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="64dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="72dp"
+        android:backgroundTint="@color/white"
+        android:baselineAlignBottom="false"
         android:contentDescription="Share button"
+        android:foregroundTint="#534F4F"
         android:src="@android:drawable/ic_menu_share"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider" />
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:tint="#221E1E" />
 
     <TextView
         android:id="@+id/available_sessions"
         android:layout_width="148dp"
         android:layout_height="38dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="68dp"
         android:text="Available sessions:"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,8 +49,8 @@
         android:id="@+id/selected_sessions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="52dp"
         android:text="Selected session: "
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +60,7 @@
         android:id="@+id/plus_button"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="92dp"
         android:layout_marginEnd="72dp"
         android:text="+"
         android:textSize="20sp"
@@ -66,7 +71,7 @@
         android:id="@+id/minus_button"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="72dp"
         android:text="-"
         android:textSize="20sp"
@@ -77,7 +82,7 @@
         android:id="@+id/divider"
         android:layout_width="409dp"
         android:layout_height="1dp"
-        android:layout_marginTop="224dp"
+        android:layout_marginTop="264dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -86,7 +91,7 @@
         android:id="@+id/divider2"
         android:layout_width="409dp"
         android:layout_height="1dp"
-        android:layout_marginBottom="396dp"
+        android:layout_marginBottom="392dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

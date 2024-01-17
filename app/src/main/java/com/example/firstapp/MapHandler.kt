@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.LocalDateTime
 import kotlin.math.abs
@@ -35,7 +36,7 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
                     MarkerOptions()
                         .position(location)
                         .title("Measure: " + this.markerId.toString())
-                        .snippet("Time: ${LocalDateTime.now()}, Laps: $laps, Distance: ${calculateTotalDistance()} meters")
+                        .snippet("Time: ${LocalDateTime.now()}, Laps: ${this.laps}, Distance: ${calculateTotalDistance()} meters")
                 val marker = googleMap.addMarker(markerOptions)
                 if (marker != null) {
                     markers.add(marker)
@@ -57,9 +58,8 @@ class MapHandler(private val mapFragment: SupportMapFragment) {
                     MarkerOptions()
                         .position(location)
                         .title("Measure: " + this.markerId.toString())
-                        .snippet("Time: ${LocalDateTime.now()}, Laps: $laps, Distance: ${calculateTotalDistance()} meters")
+                        .snippet("Time: ${LocalDateTime.now()}, Laps: ${this.laps}, Distance: ${calculateTotalDistance()} meters")
                 val marker = googleMap.addMarker(markerOptions)
-
                 if (marker != null) {
                     markers.add(marker)
                     this.markerId++
