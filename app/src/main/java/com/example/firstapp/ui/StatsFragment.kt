@@ -22,7 +22,7 @@ class StatsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         if (checkPermissions()) {
-            fileGpxIO.downloadGpxFile(requireContext(), sessions[sessionId - 1])
+            //.downloadGpxFile(requireContext(), sessions[sessionId - 1])
         } else {
             requestPermissions()
         }
