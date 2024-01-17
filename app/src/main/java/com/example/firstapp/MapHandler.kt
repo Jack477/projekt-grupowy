@@ -12,7 +12,6 @@ import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.LocalDateTime
 import kotlin.math.abs
 
 class MapHandler(private val mapFragment: SupportMapFragment) {

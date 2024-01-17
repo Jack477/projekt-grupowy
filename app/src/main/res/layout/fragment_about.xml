@@ -7,4 +7,17 @@
     android:orientation="vertical"
     tools:context=".ui.AboutFragment">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="Our application turns your journey into an interactive experience, providing detailed insights and real-time tracking of your adventures.  \n\nKey Features:  \n\n - Live GPS Mapping: Watch your route unfold in real time on the map, ensuring you're always on track and aware of your surroundings.  \n\n - Comprehensive GPX File Generation: Automatically create GPX files of your routes, perfect for sharing or revisiting your adventures.  \n\n - Total Distance and Time Tracking: Get accurate measurements of the total distance covered and the duration of your journey, helping you gauge your performance. \n\n - Waypoint Management: Mark and manage significant points along your route, enhancing your navigation and experience. \n\n - Coordinate Display: View precise geographical coordinates at any point in your journey, connecting you more closely to the terrain. \n\n - Voice Command Integration: Hands-free control through voice commands, making it easier to use the app while on the move.  "
+        android:textAlignment="viewStart"
+        android:textStyle="italic"
+        android:typeface="sans"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

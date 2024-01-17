@@ -96,7 +96,7 @@ class MainFragment : Fragment() {
         }
         voiceSwitch.setOnClickListener {
             if (voiceControl == false) {
-                Toast.makeText(context, "Rozpoznawanie mowy on", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Speech recognize on", Toast.LENGTH_SHORT).show()
                 voiceControl = true
                 btnTraceControl.isEnabled = false
 
@@ -114,8 +114,8 @@ class MainFragment : Fragment() {
                     override fun onEndOfSpeech() {}
 
                     override fun onError(error: Int) {
-                        Toast.makeText(context, "Błąd rozpoznawania mowy", Toast.LENGTH_SHORT).show()
-                        Log.d("SpeechRecognition", "Blad")
+                        Toast.makeText(context, "Speech recognize error", Toast.LENGTH_SHORT).show()
+                        Log.d("SpeechRecognition", "Error")
                         speechToText.handler.postDelayed({
                             speechToText.startListening()
                         }, 1000)
@@ -137,6 +137,7 @@ class MainFragment : Fragment() {
                                     mapHandler.setStartTime(LocalTime.now())
                                     getLocationTask.run()
                                     commandRecognized = true
+                                    speechToText.startListening()
                                     break
                                 } else if (result.equals("stop", ignoreCase = true)) {
                                     sessions[sessionId].stopSession(LocalTime.now(), mapHandler.calculateTotalDistance(), mapHandler.getMarkersArray(), 0)
@@ -146,6 +147,7 @@ class MainFragment : Fragment() {
                                     sessionId++
                                     sharedViewModel.runSession = sessions[sessionId-1]
                                     commandRecognized = true
+                                    speechToText.startListening()
                                     break
                                 }
                             }
@@ -165,7 +167,7 @@ class MainFragment : Fragment() {
             }
             else
             {
-                Toast.makeText(context, "Rozpoznawanie mowy off", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Speech recognize off", Toast.LENGTH_SHORT).show()
                 btnTraceControl.isEnabled = true
 
                 speechToText.stopListening()
@@ -176,7 +178,7 @@ class MainFragment : Fragment() {
         }
         voiceSwitch.setOnClickListener {
             if (voiceControl == false) {
-                Toast.makeText(context, "Rozpoznawanie mowy on", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Speech recognize on", Toast.LENGTH_SHORT).show()
                 voiceControl = true
                 btnTraceControl.isEnabled = false
 
@@ -194,8 +196,8 @@ class MainFragment : Fragment() {
                     override fun onEndOfSpeech() {}
 
                     override fun onError(error: Int) {
-                        Toast.makeText(context, "Błąd rozpoznawania mowy", Toast.LENGTH_SHORT).show()
-                        Log.d("SpeechRecognition", "Blad")
+                        Toast.makeText(context, "Speech recognize error", Toast.LENGTH_SHORT).show()
+                        Log.d("SpeechRecognition", "error")
                         speechToText.handler.postDelayed({
                             speechToText.startListening()
                         }, 1000)
@@ -244,7 +246,7 @@ class MainFragment : Fragment() {
             }
             else
             {
-                Toast.makeText(context, "Rozpoznawanie mowy off", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Speech recognize off", Toast.LENGTH_SHORT).show()
                 btnTraceControl.isEnabled = true
 
                 speechToText.stopListening()
