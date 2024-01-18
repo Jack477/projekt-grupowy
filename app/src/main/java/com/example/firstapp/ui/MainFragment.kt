@@ -82,6 +82,8 @@ class MainFragment : Fragment() {
                 handler.removeCallbacksAndMessages(null)
                 this.sessionId++
                 sharedViewModel.runSession = sessions[sessionId-1]
+
+                sharedViewModel.setSessionStopped(true)
             }
         }
 

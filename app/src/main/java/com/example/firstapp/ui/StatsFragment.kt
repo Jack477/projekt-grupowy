@@ -58,6 +58,16 @@ class StatsFragment : Fragment() {
                 requestPermissions()
             }
         }
+
+        sharedViewModel.sessionStoppedLiveData.observe(viewLifecycleOwner) { sessionStopped ->
+            if (sessionStopped) {
+                prepareChartData()
+
+                println("DUPA!!!!!!!!!!!!!!!!!!")
+
+                sharedViewModel.setSessionStopped(false)
+            }
+        }
     }
 
     private fun checkPermissions(): Boolean {
@@ -78,5 +88,41 @@ class StatsFragment : Fragment() {
         ActivityCompat.requestPermissions(requireActivity(), permissions,
             MY_PERMISSIONS_REQUEST_STORAGE
         )
+    }
+
+    private fun prepareChartData() {
+        val distanceArray = mutableListOf<Float>()
+
+        //TEMP
+
+        for (i in 1..10) {
+            val randomValue = (190f + (Math.random() * 20)).toFloat()
+            distanceArray.add(randomValue)
+        }
+
+        for (i in 11..20) {
+            val randomValue = (200f + (Math.random() * 100)).toFloat()
+            distanceArray.add(randomValue)
+        }
+
+        sharedViewModel.runSession?.let { session ->
+            session.getMarkersList().forEachIndexed { _, marker ->
+                val snippetData = marker.snippet?.split(", ")
+                val lap = snippetData?.get(1)?.substring(6)
+                val distanceText = snippetData?.get(2)?.substring(0, snippetData[2].indexOf(" meters"))
+                val distanceValue = distanceText?.toFloatOrNull() ?: 0.0f
+                var latestLap: String? = "0"
+                var lastDistance: String? = "0"
+
+                if (lap != latestLap) {
+                    distanceArray.add(distanceValue)
+                    latestLap = lap
+                }
+
+                println(lap)
+                println(distanceValue)
+
+            }
+        }
     }
 }
