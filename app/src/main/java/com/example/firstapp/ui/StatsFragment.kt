@@ -151,62 +151,27 @@ class StatsFragment : Fragment() {
     }
 
     private fun prepareChartData(): List<BarEntry> {
-        val distanceArray = mutableListOf<Float>()
+        val maxDistancePerLap = mutableMapOf<String, Float>()
 
         sharedViewModel.runSession?.let { session ->
-            var latestLap: String? = null
-            var lastDistance: Float? = null
-
-            val lastDistanceList = mutableListOf<Float>()
-
             session.getMarkersList().forEachIndexed { _, marker ->
                 val snippetData = marker.snippet?.split(", ")
                 val lap = snippetData?.get(1)?.substring(6)
                 val distanceText = snippetData?.get(2)?.substringBefore(" meters")
                 val distanceValue = distanceText?.substringAfter("Distance:")?.trim()?.toFloatOrNull()
                 println(distanceValue)
-
-                if (lap != latestLap && lap!= "0") {
-                    lastDistance?.let { lastDistanceList.add(it) }
-                    if (distanceValue != null) {
-                        distanceArray.add(distanceValue)
+                println(lap)
+                if (distanceValue != null && lap != null) {
+                    // Max value for lap
+                    val currentMax = maxDistancePerLap[lap] ?: 0f
+                    if (distanceValue > currentMax) {
+                        maxDistancePerLap[lap] = distanceValue
                     }
-
-                    latestLap = lap
-                    lastDistance = distanceValue
-                } else {
-                    if (distanceValue != null) {
-                        lastDistanceList.add(distanceValue)
-                    }
-
-                }
-
-                latestLap = lap
-                lastDistance = distanceValue
-            }
-            if(latestLap == "0")
-            {
-                if (lastDistance != null) {
-                    distanceArray.add(lastDistance!!)
                 }
             }
-
-
-//            // Przykładowe DANE!! - trzeba wywalic jak bedzie dzialac przypisanie
-//            for (i in 1..15) {
-//                val randomValue = (180f + (Math.random() * 40)).toFloat()
-//                distanceArray.add(randomValue)
-//            }
-
         }
 
-
-        val amountOfOccurrences = countNearData(distanceArray)
-
-        println(distanceArray)
-        println(amountOfOccurrences)
-
-        return amountOfOccurrences.map { BarEntry(it.key, it.value.toFloat()) }
+        return maxDistancePerLap.map { BarEntry(it.key.toFloat(), it.value) }
     }
 
     fun countNearData(lista: MutableList<Float>): Map<Float, Int> {
