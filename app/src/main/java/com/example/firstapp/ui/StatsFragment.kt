@@ -14,8 +14,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.firstapp.R
 import com.example.firstapp.FileGPXIO
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import android.graphics.Color
+import com.github.mikephil.charting.components.XAxis
+import kotlin.reflect.typeOf
 
 class StatsFragment : Fragment() {
+    private lateinit var barChart: BarChart
     private val fileGpxIO = FileGPXIO()
     private lateinit var sharedViewModel: SharedViewModel
     companion object {
@@ -42,6 +51,9 @@ class StatsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        barChart = view.findViewById(R.id.barchart)
+
         val downloadButton = view.findViewById<Button>(R.id.download_button)
         val shareButton = view.findViewById<ImageButton>(R.id.share_button)
         downloadButton.setOnClickListener {
@@ -61,6 +73,16 @@ class StatsFragment : Fragment() {
                 }
             } else {
                 requestPermissions()
+            }
+        }
+
+        sharedViewModel.sessionStoppedLiveData.observe(viewLifecycleOwner) { sessionStopped ->
+            if (sessionStopped) {
+                println("DATA TO HISTOGRAM!!!!!!!!!!!!!!!!!!:")
+                val histogramData = prepareChartData()
+                generateChart(histogramData)
+
+                sharedViewModel.setSessionStopped(false)
             }
         }
     }
@@ -83,5 +105,93 @@ class StatsFragment : Fragment() {
         ActivityCompat.requestPermissions(requireActivity(), permissions,
             MY_PERMISSIONS_REQUEST_STORAGE
         )
+    }
+
+//    private fun generateHistogram() {
+//        val values = mutableListOf<BarEntry>()
+//        for (i in 1..10) {
+//            val randomValue = (190f + (Math.random() * 20)).toFloat()
+//            values.add(BarEntry(randomValue, i.toFloat()))
+//        }
+//
+//        val barDataSet = BarDataSet(values, "Temp hist for test with random data")
+//        barDataSet.color = Color.BLUE
+//
+//        val dataSets = mutableListOf<IBarDataSet>()
+//        dataSets.add(barDataSet)
+//
+//        val data = BarData(dataSets)
+//        barChart.data = data
+//        barChart.setFitBars(true)
+//
+//        barChart.description.isEnabled = false
+//        barChart.setDrawValueAboveBar(true)
+//        barChart.xAxis.valueFormatter = null
+//        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+//        barChart.xAxis.setDrawGridLines(false)
+//        barChart.axisLeft.setDrawGridLines(false)
+//        barChart.axisRight.isEnabled = false
+//        barChart.animateY(1000)
+//    }
+
+    private fun generateChart(values: List<BarEntry>) {
+        val barDataSet = BarDataSet(values, "Number of laps of a given length")
+        barDataSet.color = Color.BLUE
+
+        val dataSets = mutableListOf<IBarDataSet>()
+        dataSets.add(barDataSet)
+
+        val data = BarData(dataSets)
+        barChart.data = data
+        barChart.setFitBars(true)
+
+        barChart.description.isEnabled = false
+        barChart.setDrawValueAboveBar(true)
+        barChart.xAxis.valueFormatter = null
+        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        barChart.xAxis.setDrawGridLines(false)
+        barChart.axisLeft.setDrawGridLines(false)
+        barChart.axisRight.isEnabled = false
+        barChart.animateY(1000)
+    }
+
+    private fun prepareChartData(): List<BarEntry> {
+        val maxDistancePerLap = mutableMapOf<String, Float>()
+
+        sharedViewModel.runSession?.let { session ->
+            session.getMarkersList().forEachIndexed { _, marker ->
+                val snippetData = marker.snippet?.split(", ")
+                val lap = snippetData?.get(1)?.substring(6)
+                val distanceText = snippetData?.get(2)?.substringBefore(" meters")
+                val distanceValue = distanceText?.substringAfter("Distance:")?.trim()?.toFloatOrNull()
+                println(distanceValue)
+                println(lap)
+                if (distanceValue != null && lap != null) {
+                    // Max value for lap
+                    val currentMax = maxDistancePerLap[lap] ?: 0f
+                    if (distanceValue > currentMax) {
+                        maxDistancePerLap[lap] = distanceValue
+                    }
+                }
+            }
+        }
+
+        return maxDistancePerLap.map { BarEntry(it.key.toFloat(), it.value) }
+    }
+
+    fun countNearData(lista: MutableList<Float>): Map<Float, Int> {
+        val diffInMeters = 1.0f
+        val amountOfApperances = mutableMapOf<Float, Int>()
+
+        for (dane in lista) {
+            val roundedData = dane.roundTo(diffInMeters)
+            amountOfApperances[roundedData] = amountOfApperances.getOrDefault(roundedData, 0) + 1
+        }
+
+        return amountOfApperances.toMap()
+    }
+
+    fun Float.roundTo(diffInMeters: Float): Float {
+        return (this / diffInMeters).toInt().toFloat() * diffInMeters
     }
 }
