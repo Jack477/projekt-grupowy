@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 class SharedViewModel : ViewModel() {
-    var runSession: RunSession? = null
+    var runSession: MutableList<RunSession> = mutableListOf()
     private val _sessionStoppedLiveData = MutableLiveData<Boolean>()
     val sessionStoppedLiveData: LiveData<Boolean>
         get() = _sessionStoppedLiveData

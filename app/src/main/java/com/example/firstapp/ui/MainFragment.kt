@@ -23,10 +23,6 @@ import com.example.firstapp.R
 import com.google.android.gms.maps.SupportMapFragment
 import java.time.Duration
 import java.time.LocalTime
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 
 class MainFragment : Fragment() {
@@ -91,7 +87,7 @@ class MainFragment : Fragment() {
                 btnTraceControl.text = "Start"
                 handler.removeCallbacksAndMessages(null)
                 this.sessionId++
-                sharedViewModel.runSession = sessions[sessionId-1]
+                sharedViewModel.runSession.add(sessions[sessionId-1])
 
                 sharedViewModel.setSessionStopped(true)
             }
@@ -147,7 +143,7 @@ class MainFragment : Fragment() {
                                     btnTraceControl.text = "Start"
                                     handler.removeCallbacksAndMessages(null)
                                     sessionId++
-                                    sharedViewModel.runSession = sessions[sessionId-1]
+                                    sharedViewModel.runSession.add(sessions[sessionId-1])
                                     commandRecognized = true
                                     speechToText.startListening()
                                     break
