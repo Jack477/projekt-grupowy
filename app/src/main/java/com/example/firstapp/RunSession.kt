@@ -7,7 +7,7 @@ import java.time.LocalTime
 class RunSession(startTime: LocalTime) {
     private var laps: Int = 0
     private var totalDistance: Float = 0.0F
-    private var markers: MutableList<Marker> = ArrayList()
+    private var markers: MutableList<Marker> = mutableListOf()
     private lateinit var startTime: LocalTime
     private lateinit var finishTime: LocalTime
     private lateinit var duration: Duration
@@ -16,18 +16,19 @@ class RunSession(startTime: LocalTime) {
         this.startTime = startTime
     }
 
-    fun stopSession(finishTime: LocalTime, totalDistance: Float, markers: MutableList<Marker>, laps: Int)
+
+    fun stopSession(finishTime: LocalTime, totalDistance: Float, newMarkers: List<Marker>, laps: Int)
     {
         this.laps = laps
         this.totalDistance = totalDistance
-        this.markers = markers
+        this.markers.clear() // clear current list of marker
+        this.markers.addAll(newMarkers) // add new marker
         this.finishTime = finishTime
         this.duration = Duration.between(this.startTime, this.finishTime)
     }
 
-    fun getMarkersList(): MutableList<Marker> {
-        return markers
+    fun getMarkersList(): List<Marker> {
+        return markers.toList() // return copy list
     }
-
 
 }

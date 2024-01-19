@@ -11,15 +11,14 @@ import android.os.Environment
 
 class FileGPXIO {
     private var NumOfRecords: Int = 0
-    private var FileName: String = generateFileName()
 
     private fun generateFileName(): String {
         val formattedDateTime = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         return "Runner_$formattedDateTime.gpx"
     }
 
-    private fun writeDataToGpxFile(context: Context, runSession: RunSession): File {
-        val file = File(context.getExternalFilesDir(null), FileName)
+    private fun writeDataToGpxFile(context: Context, runSession: RunSession, fileName: String): File {
+        val file = File(context.getExternalFilesDir(null), fileName)
         val writer = FileWriter(file)
 
         writer.appendln("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
@@ -46,12 +45,10 @@ class FileGPXIO {
         return file
     }
 
-    fun openGpxFile(context: Context): File {
-        return File(context.getExternalFilesDir(null), FileName)
-    }
 
     fun shareFile(context: Context, runSession: RunSession) {
-        val file = writeDataToGpxFile(context, runSession)
+        val fileName = generateFileName()
+        val file = writeDataToGpxFile(context, runSession, fileName)
         if (file != null) {
             try {
                 val uri =
@@ -71,12 +68,13 @@ class FileGPXIO {
 
     @Suppress("set_timerslack_ns")
     fun downloadGpxFile(context: Context, runSession: RunSession) {
-        val file = writeDataToGpxFile(context, runSession)
+        val fileName = generateFileName()
+        val file = writeDataToGpxFile(context, runSession, fileName)
 
         if (file != null) {
             try {
                 val publicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                val newFile = File(publicDir, FileName)
+                val newFile = File(publicDir, fileName)
 
                 file.copyTo(newFile, overwrite = true)
 
@@ -86,7 +84,7 @@ class FileGPXIO {
                 request.setTitle("Download GPX File")
                 request.setMimeType("text/xml")
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, FileName)
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
 
                 val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                 downloadManager.enqueue(request)
@@ -96,5 +94,5 @@ class FileGPXIO {
             }
         }
     }
-    }
+}
 
